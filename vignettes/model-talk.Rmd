@@ -1,0 +1,41 @@
+---
+title: "faabulous: working statistical model"
+author: "Mitch Thomann, Paddy O'Shea"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The idea behind this model is rather simple, but may become more complex as we see results.  Let's employ a Bayesian heirarchical model with several key predictors and a random effect for each league member.  I think the first year's data can be used for model building, testing and validation and hopefully we will have something to employ for the 2019 season.  I think the response to be modeled will be a key part of the model building process.  My initial thought is to use percentage of remaining faab budget.  
+
+## Initial Model
+
+Let's try a beta regression model to start:
+
+Let $y_{ij}$ be faab bid $i$ for member $j$ 
+
+$$
+y_{ij} \sim Beta(\alpha_{ij},\beta_{ij}) \\
+\alpha_{ij} = \mu_{ij}\phi \\
+\beta_{ij} = (1-\mu_{ij})\phi \\
+\mu_{ij} = \mathbf{\theta'x_i} + \psi_j \\
+$$
+Prior Distributions:
+$$
+\mathbf{\theta} \sim N(\mathbf{\mu_\theta},\Sigma) \\
+\phi \sim Gamma(\alpha_\phi,\beta_\phi) \\
+\psi_j \sim N(\mu_\psi,\sigma_\psi)
+$$
+For this, the $\mathbf{x_i}$ are the faab bid fixed effects (week, position, player quality, etc.) and the $\psi_j$ is the player specific random effect.  With sparse data, which we currently have, the inference will largely will be driven by the prior.  We want to take care to see that in every model fit that the samples are mixing well especially with sparse data.  The Gamma distribution will be a likely culprit, it governs the variability of the posterior.  
+
+**IMPORTANT NOTE** We do not want the prior to be lending increased precision than is dictated by the data and prior smoothing on the fixed effects, this will lead to poor predication.
