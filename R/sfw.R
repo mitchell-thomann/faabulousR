@@ -20,7 +20,8 @@ add <- function(x, y) {
 #' @param random_dist list with elements, dist = c("norm"), mean, sd
 #' @param decimal indicator for decimal scoring 
 #' 
-#' @import tidyverse
+#' @return data_frame with team, week and random score (normal distribution)
+#' 
 #' 
 gen_team_dat <- function(team_labels=paste0("team",1:10),
                          weeks=10, 
@@ -34,3 +35,18 @@ gen_team_dat <- function(team_labels=paste0("team",1:10),
   }
   return(team_dat)
 }
+
+#' Calculate Schedule Free Wins (SFW)
+#' 
+#' 
+#' @param team_labels vector of team labels
+#' @param weeks total number of weeks
+#' @param random_dist list with elements, dist = c("norm"), mean, sd
+#' @param decimal indicator for decimal scoring 
+#' 
+#' @return data_frame with team's SFW by week & cumulative. May include plots 
+#' (may add separate functions), bar plot of each teams SFW vs actual wins and scatterplot of
+#' SFW vs actual wins
+#' 
+#' 
+
