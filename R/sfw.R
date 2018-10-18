@@ -33,15 +33,14 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
       week = rep(1:weeks, each = length(team_labels))
     )
     team_dat$scores <- rnorm(n = nrow(team_dat), mean = random_dist$mean, sd = random_dist$sd)
-    if (!decimal) floor(team_dat$scores)
+    if (!decimal) team_dat$scores <- floor(team_dat$scores)
   }
   return(team_dat)
 }
 
 #' Calculate Schedule Free Wins (SFW)
 #'
-#'
-#' @param
+#' @param 
 #' @param
 #' @param
 #' @param
@@ -52,6 +51,7 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
 #'
 #' @export
 #'
-sfw <- function(team_dat) {
-
+sfw <- function(team_dat, teams) {
+  ranks <- team_dat %>% group_by(week) %>% mutate(rank = rank(scores))
+  sfw <- ranks %>% group_by(team) %>% summarize(sfw=sum(rank)/teams) #check denominator
 }
