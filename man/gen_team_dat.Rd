@@ -4,17 +4,20 @@
 \alias{gen_team_dat}
 \title{Generate team data by week for testing}
 \usage{
-gen_team_dat(labels = paste0("team", 1:10), weeks = 10,
-  distribution = "norm", decimal = F)
+gen_team_dat(team_labels = paste0("team", 1:10), weeks = 10,
+  random_dist = list(dist = "norm", mean = 100, sd = 10), decimal = F)
 }
 \arguments{
-\item{labels}{vector of team labels}
+\item{team_labels}{vector of team labels}
 
 \item{weeks}{total number of weeks}
 
-\item{distribution}{list with elements, dist = c("norm"), mean, sd}
+\item{random_dist}{list with elements, dist = c("norm"), mean, sd}
 
 \item{decimal}{indicator for decimal scoring}
+}
+\value{
+data_frame with team, week and random score (normal distribution)
 }
 \description{
 Generate team data by week for testing

@@ -1,17 +1,3 @@
-#### Example to follow - delete
-
-#' Add together two numbers.
-#'
-#' @param x A number.
-#' @param y A number.
-#' @return The sum of \code{x} and \code{y}.
-#' @examples
-#' add(1, 1)
-#' add(10, 1)
-add <- function(x, y) {
-  x + y
-}
-
 #' Generate team data by week for testing
 #'
 #'
@@ -39,11 +25,11 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
 }
 
 #' Calculate Schedule Free Wins (SFW)
+#' 
+#' Schedule Free Wins Description
 #'
-#' @param 
-#' @param
-#' @param
-#' @param
+#' @param team_dat tibble of teams scores by week, columns must include week, scores by week 
+#'   (may be decimal), team labels
 #'
 #' @return data_frame with team's SFW by week & cumulative. May include plots
 #' (may add separate functions), bar plot of each teams SFW vs actual wins and scatterplot of
@@ -51,7 +37,7 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
 #'
 #' @export
 #'
-sfw <- function(team_dat, teams) {
+sfw <- function(team_dat) {
   ranks <- team_dat %>% group_by(week) %>% mutate(rank = rank(scores))
-  sfw <- ranks %>% group_by(team) %>% summarize(sfw=sum(rank)/teams) #check denominator
+  return(ranks %>% group_by(team) %>% summarize(sfw=sum(rank-1)/(length(unique(team_dat$team))-1)))
 }
