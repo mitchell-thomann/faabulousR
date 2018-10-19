@@ -1,14 +1,15 @@
 Package: faabulousR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Fantasy Football Code For Copper Pennies League
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Mitch Thomann
+Maintainer: <mitchell.thomann@gmail.com>
+Description: Calculates and visualizes Schedule Free Wins, a luck free ranking system for points
+  fantasy system
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Imports: magrittr
 Suggests: knitr,
     rmarkdown,
     testthat
