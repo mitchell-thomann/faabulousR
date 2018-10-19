@@ -36,6 +36,8 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
 #' SFW vs actual wins
 #'
 #' @export
+#' 
+#' @importFrom magrittr %>%
 #'
 sfw <- function(team_dat) {
   ranks <- team_dat %>% group_by(week) %>% mutate(rank = rank(scores))
