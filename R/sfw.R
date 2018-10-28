@@ -34,18 +34,19 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
 #'
 #'
 gen_team_wins <- function(team_labels = paste0("team", 1:10),
-                         weeks = 10) {
-    team_dat <- dplyr::data_frame(
-      team = team_labels,
-      wins = round(rnorm(length(team_labels),mean=5,sd=2)))
+                          weeks = 10) {
+  team_dat <- dplyr::data_frame(
+    team = team_labels,
+    wins = round(rnorm(length(team_labels), mean = 5, sd = 2))
+  )
   return(team_dat)
 }
 
 #' Calculate Schedule Free Wins (SFW)
-#' 
+#'
 #' Schedule Free Wins Description
 #'
-#' @param team_dat tibble of teams scores by week, columns must include week, scores by week 
+#' @param team_dat tibble of teams scores by week, columns must include week, scores by week
 #'   (may be decimal), team labels
 #'
 #' @return data_frame with team's SFW by week & cumulative. May include plots
@@ -53,20 +54,21 @@ gen_team_wins <- function(team_labels = paste0("team", 1:10),
 #' SFW vs actual wins
 #'
 #' @export
-#' 
+#'
 #' @importFrom magrittr %>%
-#' @import dplyr 
+#' @import dplyr
 #'
 sfw <- function(team_dat) {
   ranks <- team_dat %>% group_by(week) %>% mutate(rank = rank(scores))
-  sfw_week <- ranks %>% group_by(week) %>% 
-    mutate(sfw = (rank(scores)-1)/(length(unique(team_dat$team))-1))
+  sfw_week <- ranks %>%
+    group_by(week) %>%
+    mutate(sfw = (rank(scores) - 1) / (length(unique(team_dat$team)) - 1))
   sfw_cum <- sfw_week %>% group_by(team) %>% mutate(sfw_cum = cumsum(sfw))
   return(sfw_cum)
 }
 
 #' Plots cumulative SFW
-#' 
+#'
 #' Generates Longitudinal SFW Plot
 #'
 #' @param sfw_obj sfw data_frame object from sfw()
@@ -76,16 +78,16 @@ sfw <- function(team_dat) {
 #' @export
 #'
 #' @import ggplot2
-#' 
-plot_cumsfw <- function(sfw_obj){
-  p <-ggplot(data=sfw_obj,aes(x=week,y=sfw_cum,group=team,colour=team))+geom_line()+
-        ylab("Cumulative SFW") + guides(colour=guide_legend(title="Team"))+
-        scale_x_continuous(name = "Week",breaks=unique(sfw_obj$week))
+#'
+plot_cumsfw <- function(sfw_obj) {
+  p <- ggplot(data = sfw_obj, aes(x = week, y = sfw_cum, group = team, colour = team)) + geom_line() +
+    ylab("Cumulative SFW") + guides(colour = guide_legend(title = "Team")) +
+    scale_x_continuous(name = "Week", breaks = unique(sfw_obj$week))
   return(p)
 }
 
 #' Plots SFW vs Wins
-#' 
+#'
 #' Generates Scatterplot of SFW vs Wins
 #'
 #' @param sfw_obj sfw data_frame object from sfw()
@@ -97,14 +99,13 @@ plot_cumsfw <- function(sfw_obj){
 #'
 #' @import ggplot2
 #' @import dplyr
-#' 
-plot_scatsfw <- function(sfw_obj, wins_actual){
-  plot_dat <- inner_join(filter(sfw_obj,week==max(sfw_obj$week)),wins_actual,by="team")
-  p <- ggplot(data=plot_dat,aes(x=wins,y=sfw_cum,group=team,colour=team))+geom_point(size=3) +
-         ylim(0,max(plot_dat$wins)) + ylab("Cumulative SFW") +
-         scale_x_continuous(name = "Wins",breaks=seq(0,max(plot_dat$wins))) + 
-         guides(colour=guide_legend(title="Team"))+ 
-         geom_abline(intercept = 0, slope = 1, linetype = "dashed")
+#'
+plot_scatsfw <- function(sfw_obj, wins_actual) {
+  plot_dat <- inner_join(filter(sfw_obj, week == max(sfw_obj$week)), wins_actual, by = "team")
+  p <- ggplot(data = plot_dat, aes(x = wins, y = sfw_cum, group = team, colour = team)) + geom_point(size = 3) +
+    ylim(0, max(plot_dat$wins)) + ylab("Cumulative SFW") +
+    scale_x_continuous(name = "Wins", breaks = seq(0, max(plot_dat$wins))) +
+    guides(colour = guide_legend(title = "Team")) +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed")
   return(p)
 }
-
