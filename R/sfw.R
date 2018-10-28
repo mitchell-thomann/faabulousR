@@ -24,6 +24,23 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
   return(team_dat)
 }
 
+#' Generate actual wins by week for testing
+#'
+#'
+#' @param team_labels vector of team labels
+#' @param weeks total number of weeks
+#'
+#' @return data_frame with team and wins
+#'
+#'
+gen_team_wins <- function(team_labels = paste0("team", 1:10),
+                         weeks = 10) {
+    team_dat <- dplyr::data_frame(
+      team = rep(team_labels, weeks),
+      wins = round(runif(length(team_labels)),0,weeks))
+  return(team_dat)
+}
+
 #' Calculate Schedule Free Wins (SFW)
 #' 
 #' Schedule Free Wins Description
@@ -48,22 +65,42 @@ sfw <- function(team_dat) {
   return(sfw_cum)
 }
 
-#' Plots for SFW
+#' Plots cumulative SFW
 #' 
-#' Generates Plots For SWF
+#' Generates Longitudinal SFW Plot
 #'
 #' @param sfw_obj sfw data_frame object from sfw()
 #'
-#' @return plot objects for SFW
+#' @return plot of SFW across week
 #'
 #' @export
-#' 
-#' @import dplyr
+#'
 #' @import ggplot2
-#' @importFrom magrittr %>%
 #' 
-plot_sfw <- function(sfw_obj){
-  ggplot(data=sfw_obj,aes(x=week,y=sfw_cum,group=team,colour=team))+geom_line()+
-    ylab("Cumulative SFW") + guides(colour=guide_legend(title="Team"))+
-    scale_x_continuous(name = "Week",breaks=unique(sfw_obj$week))
+plot_cumsfw <- function(sfw_obj){
+  p <-ggplot(data=sfw_obj,aes(x=week,y=sfw_cum,group=team,colour=team))+geom_line()+
+        ylab("Cumulative SFW") + guides(colour=guide_legend(title="Team"))+
+        scale_x_continuous(name = "Week",breaks=unique(sfw_obj$week))
+  return(p)
 }
+
+#' Plots SFW vs Wins
+#' 
+#' Generates Scatterplot of SFW vs Wins
+#'
+#' @param sfw_obj sfw data_frame object from sfw()
+#' @param wins_actual data_frame with actual wins, columns for team name and wins
+#'
+#' @return plot of SFW vs Wins
+#'
+#' @export
+#'
+#' @import ggplot2
+#' @import dplyr
+#' 
+plot_scatsfw <- function(sfw_obj, wins_actual){
+  plot_dat <- inner_join(filter(sfw_obj,week==max(sfw_obj$week)),wins_actual,by=team)
+  p <- ggplot(data=plot_dat,aes(x=wins,y=sfw_cum,group=team,colour=team))+geom_point()+
+  return(p)
+}
+
