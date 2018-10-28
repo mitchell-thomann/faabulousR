@@ -44,3 +44,4 @@ sfw <- function(team_dat) {
   ranks <- team_dat %>% group_by(week) %>% mutate(rank = rank(scores))
   return(ranks %>% group_by(team) %>% summarize(sfw=sum(rank-1)/(length(unique(team_dat$team))-1)))
 }
+
