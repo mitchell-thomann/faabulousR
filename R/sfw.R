@@ -42,6 +42,9 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
 #'
 sfw <- function(team_dat) {
   ranks <- team_dat %>% group_by(week) %>% mutate(rank = rank(scores))
+  sfw <- ranks %>% group_by(week) %>% 
+    mutate(sfw = (rank(scores)-1)/(length(unique(team_dat$team))-1))
+  print(sfw)
   return(ranks %>% group_by(team) %>% summarize(sfw=sum(rank-1)/(length(unique(team_dat$team))-1)))
 }
 
