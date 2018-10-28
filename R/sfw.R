@@ -44,7 +44,26 @@ sfw <- function(team_dat) {
   ranks <- team_dat %>% group_by(week) %>% mutate(rank = rank(scores))
   sfw_week <- ranks %>% group_by(week) %>% 
     mutate(sfw = (rank(scores)-1)/(length(unique(team_dat$team))-1))
-  sfw_cum <- sfw_week %>% summarize(sfw = sum(sfw))
-  return(list(sfw=sfw_cum,sfw_long=sfw_week))
+  sfw_cum <- sfw_week %>% group_by(team) %>% mutate(sfw_cum = cumsum(sfw))
+  return(sfw_cum)
 }
 
+#' Plots for SFW
+#' 
+#' Generates Plots For SWF
+#'
+#' @param sfw_obj sfw data_frame object from sfw()
+#'
+#' @return plot objects for SFW
+#'
+#' @export
+#' 
+#' @import dplyr
+#' @import ggplot2
+#' @importFrom magrittr %>%
+#' 
+plot_sfw <- function(sfw_obj){
+  ggplot(data=sfw_obj,aes(x=week,y=sfw_cum,group=team,colour=team))+geom_line()+
+    ylab("Cumulative SFW") + guides(colour=guide_legend(title="Team"))+
+    scale_x_continuous(name = "Week",breaks=unique(sfw_obj$week))
+}
