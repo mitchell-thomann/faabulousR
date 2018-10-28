@@ -36,8 +36,8 @@ gen_team_dat <- function(team_labels = paste0("team", 1:10),
 gen_team_wins <- function(team_labels = paste0("team", 1:10),
                          weeks = 10) {
     team_dat <- dplyr::data_frame(
-      team = rep(team_labels, weeks),
-      wins = round(runif(length(team_labels)),0,weeks))
+      team = team_labels,
+      wins = round(rnorm(length(team_labels),mean=5,sd=2)))
   return(team_dat)
 }
 
@@ -99,8 +99,12 @@ plot_cumsfw <- function(sfw_obj){
 #' @import dplyr
 #' 
 plot_scatsfw <- function(sfw_obj, wins_actual){
-  plot_dat <- inner_join(filter(sfw_obj,week==max(sfw_obj$week)),wins_actual,by=team)
-  p <- ggplot(data=plot_dat,aes(x=wins,y=sfw_cum,group=team,colour=team))+geom_point()+
+  plot_dat <- inner_join(filter(sfw_obj,week==max(sfw_obj$week)),wins_actual,by="team")
+  p <- ggplot(data=plot_dat,aes(x=wins,y=sfw_cum,group=team,colour=team))+geom_point(size=3) +
+         ylim(0,max(plot_dat$wins)) + ylab("Cumulative SFW") +
+         scale_x_continuous(name = "Wins",breaks=seq(0,max(plot_dat$wins))) + 
+         guides(colour=guide_legend(title="Team"))+ 
+         geom_abline(intercept = 0, slope = 1, linetype = "dashed")
   return(p)
 }
 
