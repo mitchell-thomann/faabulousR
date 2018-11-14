@@ -46,7 +46,7 @@ gen_team_wins <- function(team_labels = paste0("team", 1:10),
 #'
 #' Schedule Free Wins Description
 #'
-#' @param team_dat tibble of teams scores by week, columns must include week, scores by week
+#' @param team_dat tibble of teams scores by week, columns must include week, scores
 #'   (may be decimal), team labels
 #'
 #' @return data_frame with team's SFW by week & cumulative. May include plots
