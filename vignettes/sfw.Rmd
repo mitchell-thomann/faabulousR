@@ -1,0 +1,41 @@
+---
+title: "Schedule Free Wins (SFW)"
+author: "Mitchell Thomann"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Schedule Free Wins (SFW) is a metric that measures fantasy performance by week.  The goal of SFW is to provide fantasy players a metric to measure a team's performance against the entire league's schedule instead of just against a single opponent, which can be highly luck driven.  
+
+The intuition behind this statistic is simple, how many expected wins given the scores of the entire league.  We have all been in the situation where we score the second highest points for a week, yet play the highest scoring team.  This results in a loss on our record, which is highly unlucky because if we had played any other opponent, we would have won our game.  Fantasy is the perfect setting for this statistic because each team has no effect on the opponents score and the schedules typically are completely random.  This is a better statistic than say total points score for measuring team performance because a few outliers can dramatically affect that statistic whereas this statistic is on the wins scale so outliers contribute only to a single week's SFW.
+
+In the situation above, say in a ten team league, the player that scores second most points in a given week is $sfw = \frac{8}{9}$ because there are $9$ opponents and amongst those opponents, the player would have defeated $8$.  This is calculated for each league member to determine the SFW for the week.  Note that the cumulative total for the week is equal to the total wins that are awarded on a given week - this statistic is on the same scale as wins so a players' SFW can be compared to their actual wins.  
+
+To calculate the cumulative SFW for a season, it is simply the total SFW for each player for each week.  That is for player $i$:
+
+$$
+SFW_i = \frac{1}{K-1}\sum_{j=1}^N{rank_{ij}}
+$$
+
+where $K$ is the total number of teams in the league and $rank_{ij}$ is the rank for player {i} in the $jth$ week.
+
+** Package **
+
+This package provides a simple method for calculating and visualizing SFW.  This is driven by the functions `sfw()`, `plot_cumsfw` and `plot_scatsfw`.  
+
+Example:
+
+```
+
+```
