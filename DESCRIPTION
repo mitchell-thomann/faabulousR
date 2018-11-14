@@ -1,6 +1,6 @@
-Package: faabulousR
+Package: sfwR
 Type: Package
-Title: Fantasy Football Code For Copper Pennies League
+Title: Calculates and Visualizes Schedule Free Wins
 Version: 0.1.0
 Author: Mitch Thomann
 Maintainer: <mitchell.thomann@gmail.com>
