@@ -28,7 +28,7 @@ $$
 SFW_i = \frac{1}{K-1}\sum_{j=1}^N{rank_{ij}}
 $$
 
-where $K$ is the total number of teams in the league and $rank_{ij}$ is the rank for player {i} in the $jth$ week.
+where $K$ is the total number of teams in the league and $rank_{ij}$ is the rank for player $i$ in the $jth$ week.
 
 ** Package **
 
