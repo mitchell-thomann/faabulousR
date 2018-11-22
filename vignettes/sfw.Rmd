@@ -25,7 +25,7 @@ In the situation above, say in a ten team league, the player that scores second 
 To calculate the cumulative SFW for a season, it is simply the total SFW for each player for each week.  That is for player $i$:
 
 $$
-SFW_i = \frac{1}{K-1}\sum_{j=1}^N{rank_{ij}}
+SFW_i = \frac{1}{K-1}\sum_{j=1}^N{(rank_{ij}-1)}
 $$
 
 where $K$ is the total number of teams in the league and $rank_{ij}$ is the rank for player $i$ in the $jth$ week.
