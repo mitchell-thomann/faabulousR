@@ -1,1 +1,1 @@
-# sfwR
+# sfwR - Schedule Free Wins (a luck independent statistic for ranking fantasy teams) in R
