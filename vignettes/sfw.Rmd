@@ -36,6 +36,22 @@ This package provides a simple method for calculating and visualizing SFW.  This
 
 Example:
 
+```{r, fig.width=7, fig.height=5}
+library(sfwR)
+
+# Calculate SFW
+fantasy_sfw <- sfw(fantasy)
+
+#display sorted cumulative sfw
+fantasy_cum <- dplyr::filter(fantasy_sfw,week==11)
+dplyr::arrange(fantasy_cum, desc(sfw_cum))
+
+#plot cumulative sfw by week
+plot_cumsfw(fantasy_sfw)
+
+#plot sfw vs actual wins
+plot_scatsfw(fantasy_cum,wins_actual = dplyr::data_frame(team=unique(fantasy_cum$team),
+                                                         wins=c(5,9,7,8,6,6,6,5,4,4,3,3)))
 ```
 
-```
+The dotted line in the scatterplot represents actual wins equals SFW, the vertical distance from this line represents the difference between a team's SFW and the expected SFW for the team's actual wins.  A positive value for this distance represents a "low luck"" team and a negative value represents a "high luck"" team.  Values closer to zero for this distance represents the expected outcome with SFW and wins converging.  High values for this distance represent SFW and actual wins not in agreement and these teams are experiencing fewer or greater numbers of wins than their scores indicate. 
