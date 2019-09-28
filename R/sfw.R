@@ -47,7 +47,7 @@ gen_team_wins <- function(team_labels = paste0("team", 1:10),
 #' Schedule Free Wins Description
 #'
 #' @param team_dat tibble of teams scores by week, columns must include week, scores
-#'   (may be decimal), team labels
+#'   (may be decimal), team labels, wins
 #'
 #' @return data_frame with team's SFW by week & cumulative. May include plots
 #' (may add separate functions), bar plot of each teams SFW vs actual wins and scatterplot of
@@ -63,7 +63,10 @@ sfw <- function(team_dat) {
   sfw_week <- ranks %>%
     group_by(week) %>%
     mutate(sfw = (rank(scores) - 1) / (length(unique(team_dat$team)) - 1))
-  sfw_cum <- sfw_week %>% group_by(team) %>% mutate(sfw_cum = cumsum(sfw))
+  sfw_cum <- sfw_week %>% 
+    group_by(team) %>% 
+    mutate(sfw_cum = cumsum(sfw),
+           actual_cum = cumsum(win))
   return(sfw_cum)
 }
 
@@ -80,8 +83,10 @@ sfw <- function(team_dat) {
 #' @import ggplot2
 #'
 plot_cumsfw <- function(sfw_obj) {
-  p <- ggplot(data = sfw_obj, aes(x = week, y = sfw_cum, group = team, colour = team)) + geom_line() +
-    ylab("Cumulative SFW") + guides(colour = guide_legend(title = "Team")) +
+  p <- ggplot(data = sfw_obj, aes(x = week, y = sfw_cum, group = team, colour = team)) + 
+    geom_line() +
+    ylab("Cumulative SFW") + 
+    guides(colour = guide_legend(title = "Team")) +
     scale_x_continuous(name = "Week", breaks = unique(sfw_obj$week))
   return(p)
 }
@@ -89,6 +94,32 @@ plot_cumsfw <- function(sfw_obj) {
 #' Plots SFW vs Wins
 #'
 #' Generates Scatterplot of SFW vs Wins
+#'
+#' @param sfw_cum sfw data_frame object from sfw(), cumulative object
+#' @param wins_actual data_frame with actual wins, columns for team name and wins
+#'
+#' @return plot of SFW vs Wins
+#'
+#' @export
+#'
+#' @import ggplot2
+#' @import dplyr
+#'
+plot_scatsfw <- function(sfw_obj) {
+  #plot_dat <- inner_join(filter(sfw_obj, week == max(sfw_obj$week)), wins_actual, by = "team")
+  p <- ggplot(data = sfw_cum, aes(x = actual_cum, y = sfw_cum, group = team, colour = team)) + 
+    geom_point(size = 3) +
+    ylim(0, max(sfw_cum$actual_cum)) + 
+    ylab("Cumulative SFW") +
+    scale_x_continuous(name = "Wins", breaks = seq(0, max(sfw_cum$actual_cum))) +
+    guides(colour = guide_legend(title = "Team")) +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed")
+  return(p)
+}
+
+#' Plots Difference between SFW and Wins - Barplots
+#'
+#' Generates Barplots of SFW vs Wins
 #'
 #' @param sfw_obj sfw data_frame object from sfw()
 #' @param wins_actual data_frame with actual wins, columns for team name and wins
@@ -100,12 +131,6 @@ plot_cumsfw <- function(sfw_obj) {
 #' @import ggplot2
 #' @import dplyr
 #'
-plot_scatsfw <- function(sfw_obj, wins_actual) {
-  plot_dat <- inner_join(filter(sfw_obj, week == max(sfw_obj$week)), wins_actual, by = "team")
-  p <- ggplot(data = plot_dat, aes(x = wins, y = sfw_cum, group = team, colour = team)) + geom_point(size = 3) +
-    ylim(0, max(plot_dat$wins)) + ylab("Cumulative SFW") +
-    scale_x_continuous(name = "Wins", breaks = seq(0, max(plot_dat$wins))) +
-    guides(colour = guide_legend(title = "Team")) +
-    geom_abline(intercept = 0, slope = 1, linetype = "dashed")
-  return(p)
+plot_windiff <- function(sfw_obj){
+  
 }
