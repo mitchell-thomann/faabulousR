@@ -7,8 +7,8 @@
 sfw(team_dat)
 }
 \arguments{
-\item{team_dat}{tibble of teams scores by week, columns must include week, scores by week 
-(may be decimal), team labels}
+\item{team_dat}{tibble of teams scores by week, columns must include week, scores
+(may be decimal), team labels, wins}
 }
 \value{
 data_frame with team's SFW by week & cumulative. May include plots

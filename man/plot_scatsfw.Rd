@@ -4,12 +4,10 @@
 \alias{plot_scatsfw}
 \title{Plots SFW vs Wins}
 \usage{
-plot_scatsfw(sfw_obj, wins_actual)
+plot_scatsfw(sfw_cum)
 }
 \arguments{
-\item{sfw_obj}{sfw data_frame object from sfw()}
-
-\item{wins_actual}{data_frame with actual wins, columns for team name and wins}
+\item{sfw_cum}{sfw data_frame object from sfw(), cumulative object}
 }
 \value{
 plot of SFW vs Wins
