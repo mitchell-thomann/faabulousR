@@ -81,13 +81,17 @@ sfw <- function(team_dat) {
 #' @export
 #'
 #' @import ggplot2
+#' @import plotly
 #'
 plot_cumsfw <- function(sfw_obj) {
-  p <- ggplot(data = sfw_obj, aes(x = week, y = sfw_cum, group = team, colour = team)) + 
-    geom_line() +
+  p <- ggplotly(
+    ggplot(data = sfw_obj, aes(x = week, y = sfw_cum, colour = team)) + 
+    geom_line() + 
+    geom_point() +
     ylab("Cumulative SFW") + 
     guides(colour = guide_legend(title = "Team")) +
     scale_x_continuous(name = "Week", breaks = unique(sfw_obj$week))
+  )
   return(p)
 }
 
@@ -96,7 +100,6 @@ plot_cumsfw <- function(sfw_obj) {
 #' Generates Scatterplot of SFW vs Wins
 #'
 #' @param sfw_cum sfw data_frame object from sfw(), cumulative object
-#' @param wins_actual data_frame with actual wins, columns for team name and wins
 #'
 #' @return plot of SFW vs Wins
 #'
@@ -104,16 +107,19 @@ plot_cumsfw <- function(sfw_obj) {
 #'
 #' @import ggplot2
 #' @import dplyr
+#' @import plotly
 #'
-plot_scatsfw <- function(sfw_obj) {
+plot_scatsfw <- function(sfw_cum) {
   #plot_dat <- inner_join(filter(sfw_obj, week == max(sfw_obj$week)), wins_actual, by = "team")
-  p <- ggplot(data = sfw_cum, aes(x = actual_cum, y = sfw_cum, group = team, colour = team)) + 
+  p <- ggplotly(
+    ggplot(data = sfw_cum, aes(x = actual_cum, y = sfw_cum, colour = team)) + 
     geom_point(size = 3) +
     ylim(0, max(sfw_cum$actual_cum)) + 
     ylab("Cumulative SFW") +
     scale_x_continuous(name = "Wins", breaks = seq(0, max(sfw_cum$actual_cum))) +
     guides(colour = guide_legend(title = "Team")) +
     geom_abline(intercept = 0, slope = 1, linetype = "dashed")
+  )
   return(p)
 }
 
@@ -121,8 +127,7 @@ plot_scatsfw <- function(sfw_obj) {
 #'
 #' Generates Barplots of SFW vs Wins
 #'
-#' @param sfw_obj sfw data_frame object from sfw()
-#' @param wins_actual data_frame with actual wins, columns for team name and wins
+#' @param sfw_obj sfw data_frame object from sfw(), cumulative
 #'
 #' @return plot of SFW vs Wins
 #'
@@ -130,7 +135,18 @@ plot_scatsfw <- function(sfw_obj) {
 #'
 #' @import ggplot2
 #' @import dplyr
+#' @import plotly
 #'
-plot_windiff <- function(sfw_obj){
-  
+plot_windiff <- function(sfw_cum){
+  plot_cum <- sfw_cum %>% 
+    mutate(luck = actual_cum - sfw_cum,
+           Team = team) 
+  p <- ggplotly(
+    ggplot(data = plot_cum, aes (x = reorder(Team, -luck), y = luck, fill = Team, colour = Team)) +
+    geom_bar(stat = "identity") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    ylab("Luck") +
+    xlab("")
+  )
+  return(p)
 }
