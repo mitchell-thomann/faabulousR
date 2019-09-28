@@ -123,7 +123,7 @@ plot_scatsfw <- function(sfw_cum) {
   return(p)
 }
 
-#' Plots Difference between SFW and Wins - Barplots
+#' Plots Difference between SFW and Wins - Barplots ... Luck
 #'
 #' Generates Barplots of SFW vs Wins
 #'
@@ -150,3 +150,44 @@ plot_windiff <- function(sfw_cum){
   )
   return(p)
 }
+
+#' Plots Difference SFW and Actual Wins
+#'
+#' Generates Barplots of SFW & Wins
+#'
+#' @param sfw_obj sfw data_frame object from sfw(), cumulative
+#'
+#' @return plot of SFW vs Wins
+#'
+#' @export
+#'
+#' @import ggplot2
+#' @import dplyr
+#' @import plotly
+#'
+plot_sfw_wins <- function(sfw_cum){
+  plot_cum <- sfw_cum %>% 
+    mutate(luck = actual_cum - sfw_cum,
+           Team = team)
+  ordering <- arrange(plot_cum, -sfw_cum)$Team
+  plot_both_cum <- tibble(
+    value = c(plot_cum$sfw_cum,
+              plot_cum$actual_cum),
+    Type = factor(
+      c(rep("SFW", nrow(plot_cum)),
+        rep("Actual", nrow(plot_cum))),
+      levels = c("SFW", "Actual")),
+    Team = factor(rep(plot_cum$team, 2),
+                  levels = ordering)
+  )
+  p <- ggplotly(
+    ggplot(data = plot_both_cum, 
+           aes(x = Team, y = value, fill = Type, colour = Type)) +
+      geom_bar(stat = "identity", position = position_dodge()) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      ylab("Wins") +
+      xlab("")
+  )
+  return(p)
+}
+
